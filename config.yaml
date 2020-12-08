@@ -1,0 +1,71 @@
+common: &common
+  name:
+    item: "大項目"
+    sub-item: "中項目"
+    pos-neg: "正常系\n／異常系"
+    sub-sub-item: "小項目"
+    result: "テスト結果"
+    number: "No."
+    steps: "確認手順"
+    expected: "想定動作"
+    notes: "備考"
+
+md:
+  mark:
+    item: "## "
+    sub-item: "### "
+    sub-sub-item: "#### "
+    steps: "[0-9]+. "
+    expected: "* [ ] "
+    notes: "- "
+  <<: *common
+
+
+excel:
+
+  font: "Meiryo UI"
+
+  # どこまでマルチインデックス化（マージ）するか
+  index:
+    item: true
+    sub-item: true
+    pos-neg: true
+    sub-sub-item: true
+    result: true
+
+  # エクセルでの列幅
+  length:
+    item: 20
+    sub-item: 15
+    pos-neg: 10
+    sub-sub-item: 50
+    result: 10
+    number: 6
+    steps: 70
+    expected: 70
+    notes: 40
+
+  # 各列の水平方向位置
+  horizontal:
+    item: "center"
+    sub-item: "center"
+    pos-neg: "center"
+    sub-sub-item: "left"
+    result: "center"
+    number: "center"
+    steps: "left"
+    expected: "left"
+    notes: "left"
+
+  # 各列の垂直方向位置
+  vertical:
+    item: "top"
+    sub-item: "top"
+    pos-neg: "top"
+    sub-sub-item: "top"
+    result: "center"
+    number: "center"
+    steps: "top"
+    expected: "top"
+    notes: "top"
+  <<: *common
