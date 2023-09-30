@@ -37,7 +37,7 @@ def write_test_specification(df: pd.DataFrame, writer: pd.ExcelWriter, config_ex
     df_excel.rename(columns=config_excel["name"], inplace=True)
 
     # マージできるようにマルチインデックス化
-    df_excel.set_index([str(v) for k, v in config_excel["name"].items() if k in config_excel["index"]], inplace=True)
+    df_excel.set_index([str(v) for k, v in config_excel["name"].items() if k in config_excel["index"] and config_excel["index"][k]], inplace=True)
 
     # 項目番号をカラムとして追加しておく
     df_excel.to_excel(writer, sheet_name=sheet_name, merge_cells=merge_cells)
