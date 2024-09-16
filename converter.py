@@ -30,10 +30,6 @@ Notes:
 
 """
 
-__author__ = "Kohei, Watanabe <kohei.watanabe3@brother.co.jp>"
-__version__ = "0.1.2"
-__date__ = "07 December 2020"
-
 import os
 import sys
 
