@@ -1,71 +1,69 @@
-common: &common
-  name:
-    item: "大項目"
-    sub-item: "中項目"
-    pos-neg: "正常系\n／異常系"
-    sub-sub-item: "小項目"
-    result: "テスト結果"
-    number: "No."
-    steps: "確認手順"
-    expected: "想定動作"
-    notes: "備考"
+# columns:
+#   [セクション名]:
+#     name: 項目列名。
+#     md_pattern: 正規表現。必ずシングルクォートで囲むこと。
+#     length: セルの幅。
+#     horizontal: セル内の文字の水平位置。center, left, right
+#     vertical: セル内の文字の垂直位置。center, top, bottom
+#     multi-idx: 複数のインデックスを持つかどうか。true, false
+columns:
+  section:
+    name: '大項目'
+    md_pattern: '^## (.+)$'
+    length: 20
+    horizontal: 'left'
+    vertical: 'top'
+    multi-idx: true
+  subsection:
+    name: '中項目'
+    md_pattern: '^### (.+)$'
+    length: 15
+    horizontal: 'left'
+    vertical: 'top'
+    multi-idx: true
+  testcase:
+    name: '小項目'
+    md_pattern: '^#### (正常|異常|準正常) (OK|NG|--|未|未実施) (.+)$'
+    length: 50
+    horizontal: 'left'
+    vertical: 'top'
+    multi-idx: true
+  number:
+    name: 'No.'
+    length: 6
+    horizontal: 'center'
+    vertical: 'center'
+  pos-neg:
+    name: "正常系\n／異常系" # 改行したい場合はダブルクォーテーションで囲む
+    length: 10
+    horizontal: 'center'
+    vertical: 'center'
+  result:
+    name: 'テスト結果'
+    length: 10
+    horizontal: 'center'
+    vertical: 'center'
+  step:
+    name: '確認手順'
+    md_pattern: '^\d+\. (.+)$'
+    length: 70
+    horizontal: 'left'
+    vertical: 'top'
+  expectation:
+    name: '期待値'
+    md_pattern: '^\* \[ \] (.+)$'
+    length: 70
+    horizontal: 'left'
+    vertical: 'top'
+  notes:
+    name: '備考'
+    md_pattern: '^\- (.+)$'
+    length: 40
+    horizontal: 'left'
+    vertical: 'top'
 
-md:
-  mark:
-    item: "## "
-    sub-item: "### "
-    sub-sub-item: "#### "
-    steps: "[0-9]+. "
-    expected: "* [ ] "
-    notes: "- "
-  <<: *common
-
-
-excel:
-
-  font: "Meiryo UI"
-
-  # どこまでマルチインデックス化（マージ）するか
-  index:
-    item: true
-    sub-item: true
-    pos-neg: true
-    sub-sub-item: true
-    result: true
-
-  # エクセルでの列幅
-  length:
-    item: 20
-    sub-item: 15
-    pos-neg: 10
-    sub-sub-item: 50
-    result: 10
-    number: 6
-    steps: 70
-    expected: 70
-    notes: 40
-
-  # 各列の水平方向位置
-  horizontal:
-    item: "center"
-    sub-item: "center"
-    pos-neg: "center"
-    sub-sub-item: "left"
-    result: "center"
-    number: "center"
-    steps: "left"
-    expected: "left"
-    notes: "left"
-
-  # 各列の垂直方向位置
-  vertical:
-    item: "top"
-    sub-item: "top"
-    pos-neg: "top"
-    sub-sub-item: "top"
-    result: "center"
-    number: "center"
-    steps: "top"
-    expected: "top"
-    notes: "top"
-  <<: *common
+excel_settings:
+  font_name: Meiryo UI
+  sheet_name:
+    summary: サマリー
+    test: テスト仕様書

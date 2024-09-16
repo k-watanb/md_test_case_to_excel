@@ -2,30 +2,51 @@
 
 Markdownで書かれたテスト仕様書をExcel形式に変換します。Markdown+GitHubでテスト仕様書を差分管理したいヒトはご活用ください。
 
-![image-20201130175253467](attachments/image-20201130175253467.png)
+![](attachments/excel-image.png)
+
+## Environment
+
+本レポジトリは以下の環境でテストしています。
+
+- Windows 11
+- Python 3.11
+- pandas 2.2.2
+- openpyxl 3.1.5
+- pydantic 2.9.1
+- pyyaml 6.0.2
 
 ## Get Started
 
+### Install dependencies
+
+```shell
+pip install -r requirements.txt
+```
+
 ### Write a test specification by Markdown
 
- ```markdown
-# テストケース名
+サンプルファイルは`example/sample.md`にあります。
+
+```markdown
+# テスト仕様書
 
 ## 大項目
 ### 中項目
-#### [正常|異常] [OK|NG|--] 小項目
+#### [正常|異常|準正常] [OK|NG|未実施|--] テストケース名
 1. 確認手順
 2. 確認手順
 * [ ] 想定動作
 * [ ] 想定動作
 - 備考
- ```
+```
 
 ### Convert markdown to xlsx
 
+マークダウンファイルをエクセルファイルに変換します。
+
 ```bash
 $ python3 converter.py -h
-$ python3 converter.py -f sample.md -m
+$ python3 converter.py -f example/sample.md -m
 ```
 
 実行時に指定できるオプションとして以下があります。
@@ -36,28 +57,18 @@ $ python3 converter.py -f sample.md -m
 |-f, --file| 入力ファイルパス|
 |-m, --merge| エクセルセルをマージするか|
 
-## Environment
+セル幅や列名など、その他の設定は`config.yaml`を変更してください。
 
-- Python 3.6 or higher
-- pandas
-- openpyxl 3.0.0 or higher
-- PyYAML 5.0.0 or higher
-- docopt
-
-## Directory Structure
-
-主なファイルは以下の通り。
-
-```
-.
-|-- config.yaml    # ユーザ設定ファイル 
-|-- converter.py   # MAIN
-|-- markdown.py    # markdown関係の処理
-|-- excel.py       # excel関係の処理
-|-- sample.md      # markdown型テスト仕様書のサンプル（中身は適当）
-```
 
 ## Release Notes
+
+### v0.2.0 (2024/9/16)
+
+- ソースコード全体をリファクタリング
+- 設定ファイルの構造を見直し
+- 最新バージョンのpandas, openpyxl, pydantic, pyyamlに対応
+- テストケースの未実施ステータス名を変更（"--" -> "未実施"）
+- 準正常系を追加（"正常系", "異常系" -> "正常", "異常", "準正常"）
 
 ### v0.1.0 (2020/12/08)
 

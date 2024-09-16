@@ -1,71 +1,31 @@
-# coding: utf-8
-
 """
 Markdownで書かれたテスト仕様書をエクセルファイルに変換します。
 
 Usage:
-    converter.py [-f] <file> [-m]
-
-Options:
-    -f, --file             入力ファイルパス
-    -m, --merge            エクセルセルをマージするか
-
-Requirements:
-    - pandas
-    - openpyxl 3.0.0 or higher
-    - PyYAML 5.0.0 or higher
-    - docopt
-
-Notes:
-    - 変換するMarkdownは以下の形式で記述してください
-
-    # テスト名
-    ## 大項目
-    ### 中項目
-    #### [正常|異常] [OK|NG|--] テストケース名
-    1. 確認手順
-    2. 確認手順
-    * [ ] 期待値
-    - 備考
-
+    python converter.py -h
+    python converter.py [-f] <file> [-m]
 """
 
-import os
-import sys
+import argparse
+from pathlib import Path
 
-try:
-    import yaml
-    import pandas as pd
-    import openpyxl
-    from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
-    from openpyxl.styles.borders import BORDER_THIN
-    from docopt import docopt
-except ModuleNotFoundError as e:
-    sys.stderr.write("This program requires pandas/docopt/openpyxl>=3.0.0.")
-    sys.exit(1)
-assert yaml.__version__ >= "5.0.0", "This program requires PyYAML>=5.0.0.\n$ pip install pyyaml==5.3.1"
-assert openpyxl.__version__ >= "3.0.0", "This program requires openpyxl>=3.0.0.\b$ pip install openpyxl==3.0.5"
-
-from markdown import convert_md_to_df
-from excel import convert_df_to_excel
-
-
-def load_config() -> dict:
-    try:
-        with open("config.yaml", "r", encoding="utf-8_sig") as f:
-            config = yaml.load(f, Loader=yaml.FullLoader)
-    except FileNotFoundError:
-        sys.stderr.write("[ERROR] 設定ファイル（config.yaml）が見つかりません。")
-        sys.exit(1)
-
-    return config
-
+from src.config_loader import load_config
+from src.excel import ExcelWriter
+from src.markdown import MarkdownTestParser, read_markdown_file
 
 if __name__ == "__main__":
-    args = docopt(__doc__)
-    config = load_config()
-    df = convert_md_to_df(args["<file>"], config_md=config["md"])
-    convert_df_to_excel(df, config_excel=config["excel"],
-                        output_path=os.path.splitext(os.path.basename(args["<file>"]))[0] + ".xlsx",
-                        merge_cells=args["--merge"])
-    print("Done")
+    parser = argparse.ArgumentParser(description="Markdownで書かれたテスト仕様書をエクセルファイルに変換します。")
+    parser.add_argument("-f", "--file", type=str, required=True, help="入力ファイルパス")
+    parser.add_argument("-m", "--merge", action="store_true", help="セルをマージするか")
+    args = parser.parse_args()
+
+    config = load_config(Path(__file__).parent.joinpath("config.yaml"))
+
+    markdown_content_example = read_markdown_file(Path(args.file))
+    parser = MarkdownTestParser(markdown_content_example, config)
+    df = parser.parse()
+    print(f"-------\n{df}\n-------")
+
+    writer = ExcelWriter(df, config)
+    output_path = writer(Path(args.file).parent.joinpath(f"{Path(args.file).stem}.xlsx"), merge_cells=args.merge)
+    print(f"\nDone! The file is saved at `{output_path}`.")
